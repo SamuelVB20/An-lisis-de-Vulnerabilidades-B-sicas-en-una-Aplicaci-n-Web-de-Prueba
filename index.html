@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seguridad Web: Prácticas esenciales</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav">
+      <div class="logo">Seguridad Web</div>
+      <ul class="menu">
+        <li><a href="#inyeccion">Inyección en base de datos</a></li>
+        <li><a href="#xss">XSS</a></li>
+        <li><a href="#validacion">Fallos de validación</a></li>
+        <li><a href="#sesiones">Manejo inseguro de sesiones</a></li>
+      </ul>
+    </nav>
+    <div class="hero-content">
+      <h1 class="fade-in">Protege tu aplicación desde el diseño</h1>
+      <p class="fade-in delay-1">Buenas prácticas y prevención de vulnerabilidades comunes.</p>
+      <a class="btn fade-in delay-2" href="#inyeccion">Comenzar</a>
+    </div>
+    <div class="gradient-bg"></div>
+  </header>
+
+  <main>
+    <section id="inyeccion" class="card reveal">
+      <h2>Inyección en base de datos</h2>
+      <p>
+        La inyección ocurre cuando entradas del usuario se incorporan a consultas de base de datos sin
+        validación ni parametrización, permitiendo que la consulta sea alterada. En lugar de concatenar
+        texto, usa consultas preparadas (parámetros). Esto bloquea que el input se interprete como código.
+      </p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Riesgos</h3>
+          <ul>
+            <li><strong>Exposición:</strong> Lectura de datos sensibles.</li>
+            <li><strong>Manipulación:</strong> Inserción/actualización/borrado de registros.</li>
+            <li><strong>Disponibilidad:</strong> Daño a la integridad de la base.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Prevención</h3>
+          <ul>
+            <li><strong>Parámetros:</strong> Consultas preparadas/ORM.</li>
+            <li><strong>Validación:</strong> Tipos, longitudes, listas blancas.</li>
+            <li><strong>Privilegios mínimos:</strong> Usuario DB con permisos limitados.</li>
+            <li><strong>Registro:</strong> Monitoreo de errores y accesos.</li>
+          </ul>
+        </div>
+      </div>
+
+      <pre class="code"><code>// Ejemplo seguro con parámetros (Node + MySQL)
+const sql = "SELECT * FROM usuarios WHERE email = ? AND activo = ?";
+db.query(sql, [email, true]);</code></pre>
+    </section>
+
+    <section id="xss" class="card reveal">
+      <h2>Cross-Site Scripting (XSS)</h2>
+      <p>
+        XSS permite inyectar scripts en páginas vistas por otros usuarios cuando la aplicación refleja o
+        almacena contenido sin neutralizarlo. La defensa clave es <em>escapar</em> y <em>sanitizar</em> todo contenido
+        antes de renderizarlo, y evitar <code>innerHTML</code> con datos no confiables.
+      </p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Tipos</h3>
+          <ul>
+            <li><strong>Reflejado:</strong> Respuesta inmediata con datos no validados.</li>
+            <li><strong>Almacenado:</strong> Persistente en la base de datos.</li>
+            <li><strong>DOM-based:</strong> Manipulación insegura del DOM en el cliente.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Prevención</h3>
+          <ul>
+            <li><strong>Escapado de salida:</strong> HTML/JS/CSS según contexto.</li>
+            <li><strong>Content Security Policy (CSP):</strong> Restringe orígenes de scripts.</li>
+            <li><strong>Evitar inline scripts:</strong> Usa archivos externos y nonce.</li>
+            <li><strong>Sanitización:</strong> Librerías confiables para contenido rich.</li>
+          </ul>
+        </div>
+      </div>
+
+      <pre class="code"><code>// Ejemplo seguro en el cliente
+const span = document.querySelector("#nombreSeguro");
+span.textContent = inputUsuario; // Escapa automáticamente caracteres peligrosos</code></pre>
+    </section>
+
+    <section id="validacion" class="card reveal">
+      <h2>Fallos de validación</h2>
+      <p>
+        Confiar solo en validación del lado del cliente es insuficiente. Toda validación crítica debe
+        repetirse en el servidor: tipos, rangos, formatos y reglas de negocio. Usa listas blancas, límites de
+        longitud y mensajes claros de error para mejorar seguridad y UX.
+      </p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Buenas prácticas</h3>
+          <ul>
+            <li><strong>Servidor primero:</strong> La validación del cliente es complementaria.</li>
+            <li><strong>Listas blancas:</strong> Define qué es válido, no qué es inválido.</li>
+            <li><strong>Normalización:</strong> Limpia y transforma entradas antes de validar.</li>
+            <li><strong>Rate limiting:</strong> Evita abuso de formularios.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Ejemplo</h3>
+          <pre class="code"><code>// Validación básica (Node/Express)
+app.post("/registro", (req, res) => {
+  const { email, edad } = req.body;
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return res.status(400).send("Email inválido");
+  if (Number.isNaN(Number(edad)) || edad < 13 || edad > 120) return res.status(400).send("Edad fuera de rango");
+  // Guardar de forma segura...
+});</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="sesiones" class="card reveal">
+      <h2>Manejo inseguro de sesiones</h2>
+      <p>
+        Las sesiones y tokens mantienen el estado de autenticación. Errores comunes incluyen cookies sin
+        flags de seguridad, IDs predecibles, tokens sin expiración y almacenamiento inseguro. Configura
+        correctamente cookies, rota tokens y usa HTTPS siempre.
+      </p>
+
+      <div class="grid">
+        <div class="box">
+          <h3>Riesgos</h3>
+          <ul>
+            <li><strong>Secuestro de sesión:</strong> Robo de tokens/cookies.</li>
+            <li><strong>Fijación de sesión:</strong> Reutilizar IDs asignados.</li>
+            <li><strong>Divulgación:</strong> Tokens en logs o localStorage sin cuidado.</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Prevención</h3>
+          <ul>
+            <li><strong>Cookies seguras:</strong> <code>HttpOnly</code>, <code>Secure</code>, <code>SameSite=Strict</code>.</li>
+            <li><strong>Expiración y rotación:</strong> Tokens con TTL y renovación segura.</li>
+            <li><strong>HTTPS obligatorio:</strong> Evita MITM y fuga de credenciales.</li>
+            <li><strong>Protección CSRF:</strong> Tokens anti-CSRF y doble submit cookie.</li>
+          </ul>
+        </div>
+      </div>
+
+      <pre class="code"><code>// Ejemplo de cookie segura (Express)
+res.cookie("session", token, {
+  httpOnly: true,
+  secure: true,           // Requiere HTTPS
+  sameSite: "Strict",
+  maxAge: 1000 * 60 * 15  // 15 minutos
+});</code></pre>
+    </section>
+
+    <section class="card tips reveal">
+      <h2>Checklist práctico</h2>
+      <ul class="checklist">
+        <li><span>Parámetros en todas las consultas a DB</span></li>
+        <li><span>Escapar salida y CSP para XSS</span></li>
+        <li><span>Validación fuerte en servidor</span></li>
+        <li><span>Cookies con HttpOnly, Secure y SameSite</span></li>
+        <li><span>HTTPS, rotación de tokens y expiración</span></li>
+        <li><span>Principio de mínimo privilegio</span></li>
+        <li><span>Logs y monitoreo de incidentes</span></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Hecho para aprender y proteger: Seguridad Web esencial.</p>
+  </footer>
+
+  <script src="main.js"></script>
+</body>
+</html>

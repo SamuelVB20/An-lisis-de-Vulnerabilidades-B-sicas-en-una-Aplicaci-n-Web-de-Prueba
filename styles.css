@@ -1,0 +1,219 @@
+:root {
+  --bg: #0b1020;
+  --surface: #141a2e;
+  --accent: #7c5cff;
+  --text: #e6e8ef;
+  --muted: #9aa3b2;
+  --ok: #22c55e;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  line-height: 1.6;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.hero {
+  position: relative;
+  min-height: 60vh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+}
+
+.logo {
+  font-weight: 700;
+  letter-spacing: 0.6px;
+}
+
+.menu {
+  display: flex;
+  list-style: none;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.menu a {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: transparent;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+.menu a:hover {
+  background: rgba(124, 92, 255, 0.12);
+  transform: translateY(-1px);
+}
+
+.hero-content {
+  padding: 48px 24px 64px;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.hero .btn {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(124, 92, 255, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.hero .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(124, 92, 255, 0.5);
+}
+
+/* Animación de fondo */
+.gradient-bg {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(1000px 700px at 10% 10%, rgba(124, 92, 255, 0.25), transparent 60%),
+              radial-gradient(800px 600px at 90% 20%, rgba(35, 197, 94, 0.20), transparent 60%),
+              radial-gradient(600px 400px at 50% 90%, rgba(255, 255, 255, 0.08), transparent 60%);
+  animation: drift 18s infinite alternate ease-in-out;
+  filter: blur(10px);
+}
+@keyframes drift {
+  0% { transform: translateX(-20px) translateY(0); }
+  50% { transform: translateX(10px) translateY(-10px); }
+  100% { transform: translateX(30px) translateY(10px); }
+}
+
+/* Animaciones de entrada */
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInUp 0.8s forwards ease;
+}
+.delay-1 { animation-delay: 0.2s; }
+.delay-2 { animation-delay: 0.4s; }
+@keyframes fadeInUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 24px;
+  margin: 24px 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+@media (min-width: 720px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.code {
+  background: #0e1428;
+  border-radius: 12px;
+  padding: 14px;
+  overflow-x: auto;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--muted);
+}
+
+/* Animación de reveal al hacer scroll */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Checklist animada */
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.checklist li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(34,197,94,0.12);
+  border: 1px solid rgba(34,197,94,0.25);
+  color: #d9fdd3;
+  padding: 12px 14px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.checklist li::before {
+  content: "✓";
+  color: var(--ok);
+  font-weight: 700;
+}
+.checklist li span {
+  position: relative;
+  z-index: 1;
+}
+.checklist li::after {
+  content: "";
+  position: absolute;
+  left: -40%;
+  top: 0;
+  width: 40%;
+  height: 100%;
+  background: rgba(34,197,94,0.15);
+  transform: skewX(-20deg);
+  animation: sweep 3s ease infinite;
+}
+@keyframes sweep {
+  0% { left: -40%; }
+  50% { left: 120%; }
+  100% { left: 120%; }
+}
